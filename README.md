@@ -1,2 +1,1 @@
-# venue-and-you
-Team project: Marketing
+# Team Project Repository
