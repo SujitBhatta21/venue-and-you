@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/_interfaces/boxoffice_to_marketing/boxoffice_to_marketing.iml" filepath="$PROJECT_DIR$/_interfaces/boxoffice_to_marketing/boxoffice_to_marketing.iml" />
+      <module fileurl="file://$PROJECT_DIR$/_interfaces/marketing_to_boxoffice/marketing_to_boxoffice.iml" filepath="$PROJECT_DIR$/_interfaces/marketing_to_boxoffice/marketing_to_boxoffice.iml" />
+      <module fileurl="file://$PROJECT_DIR$/_interfaces/marketing_to_operations/marketing_to_operations.iml" filepath="$PROJECT_DIR$/_interfaces/marketing_to_operations/marketing_to_operations.iml" />
+      <module fileurl="file://$PROJECT_DIR$/_interfaces/operations_to_marketing/operations_to_marketing.iml" filepath="$PROJECT_DIR$/_interfaces/operations_to_marketing/operations_to_marketing.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/venue-and-you.iml" filepath="$PROJECT_DIR$/.idea/venue-and-you.iml" />
+    </modules>
+  </component>
+</project>
