@@ -12,7 +12,7 @@ public class LancasterLoginDashboard extends JFrame {
 
     // Database credentials
     private static final String DB_URL = "jdbc:mysql://sst-stuproj.city.ac.uk:3306/in2033t21"; // Change to your database name
-    private static final String DB_USER = "in2033t21_a"; // Change if needed
+    private static final String DB_USER = "in2033t21_a"; // Change if needed. a for admin access and d for user.
     private static final String DB_PASSWORD = "lrLUWCLVzDQ"; // Set your password if applicable
 
     public LancasterLoginDashboard() {
