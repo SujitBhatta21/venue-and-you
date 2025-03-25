@@ -31,10 +31,25 @@ public class LancasterDashboard extends JFrame {
         headerPanel.setBackground(Color.decode("#142524")); // Menu color
 
         // Logo in the top left
-        logoLabel = new JLabel("Logo");
-        logoLabel.setPreferredSize(new Dimension(150, 50));
-        logoLabel.setForeground(Color.WHITE);
-        logoLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        try {
+            // Load the image
+            ImageIcon originalIcon = new ImageIcon(
+                getClass().getClassLoader().getResource("img/lancasters-music-hall-high-resolution-logo.png"));            
+            // Resize the image if needed 
+            Image originalImage = originalIcon.getImage();
+            Image scaledImage = originalImage.getScaledInstance(150, 50, Image.SCALE_SMOOTH);
+            ImageIcon scaledIcon = new ImageIcon(scaledImage);
+            
+            logoLabel = new JLabel(scaledIcon);
+            logoLabel.setPreferredSize(new Dimension(150, 50));
+            logoLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        } catch (Exception e) {
+            // Fallback to text if image fails to load
+            logoLabel = new JLabel("Logo");
+            logoLabel.setForeground(Color.WHITE);
+            logoLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            System.err.println("Could not load logo image: " + e.getMessage());
+        }
         headerPanel.add(logoLabel, BorderLayout.WEST);
 
         // Navbar in the top middle
