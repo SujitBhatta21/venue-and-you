@@ -1,18 +1,13 @@
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.*;
 import java.util.*;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 
-/**
- * CalendarBookingApp is a Swing-based calendar application that displays booked
- * dates
- * with persistent storage between application sessions.
- */
 public class CalendarBooking {
     private static Map<String, Set<Integer>> monthlyBookings = new HashMap<>();
     private static int currentYear = 2025;
@@ -24,14 +19,20 @@ public class CalendarBooking {
     private static final String BOOKINGS_FILE = "bookings.dat";
 
     /**
-     * Main method to launch the application.
-     * 
-     * @param args command line arguments (not used)
+     * Loads booked dates from a file.
      */
-    public static void main(String[] args) {
-        // Load booked dates before creating the GUI
-        loadBookedDates();
-        SwingUtilities.invokeLater(CalendarBooking::createAndShowGUI);
+    private static void loadBookedDates() {
+        File file = new File(BOOKINGS_FILE);
+        if (file.exists()) {
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+                Object loadedObject = ois.readObject();
+                if (loadedObject instanceof Map) {
+                    monthlyBookings = (Map<String, Set<Integer>>) loadedObject;
+                }
+            } catch (IOException | ClassNotFoundException e) {
+                monthlyBookings = new HashMap<>();
+            }
+        }
     }
 
     /**
@@ -41,73 +42,26 @@ public class CalendarBooking {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(BOOKINGS_FILE))) {
             oos.writeObject(monthlyBookings);
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(null,
-                    "Error saving bookings: " + e.getMessage(),
-                    "Save Error",
-                    JOptionPane.ERROR_MESSAGE);
+            System.out.println("Error saving bookings: " + e.getMessage());
         }
     }
 
     /**
-     * Loads booked dates from a file.
+     * Returns a JPanel containing the calendar UI.
+     * This allows embedding in another JFrame instead of running a separate window.
      */
-    private static void loadBookedDates() {
-        File file = new File(BOOKINGS_FILE);
-        if (file.exists()) {
-            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
-                Object loadedObject = ois.readObject();
+    public JPanel getCalendarPanel() {
+        loadBookedDates();
 
-                // Handle backward compatibility
-                if (loadedObject instanceof Map) {
-                    // New format: Map of monthly bookings
-                    monthlyBookings = (Map<String, Set<Integer>>) loadedObject;
-                } else if (loadedObject instanceof ArrayList) {
-                    // Old format: List of booked dates
-                    Set<Integer> oldBookedDates = new HashSet<>((ArrayList<Integer>) loadedObject);
+        JPanel calendarPanel = new JPanel(new BorderLayout(10, 10));
+        calendarPanel.setBackground(Color.decode("#CCD1D2"));
+        calendarPanel.setBorder(BorderFactory.createTitledBorder("Calendar"));
 
-                    // Convert old format to new format
-                    monthlyBookings = new HashMap<>();
-                    String currentMonthKey = currentYear + "-" + currentMonth;
-                    monthlyBookings.put(currentMonthKey, oldBookedDates);
-                }
-            } catch (IOException | ClassNotFoundException e) {
-                JOptionPane.showMessageDialog(null,
-                        "Error loading bookings: " + e.getMessage(),
-                        "Load Error",
-                        JOptionPane.ERROR_MESSAGE);
-                monthlyBookings = new HashMap<>();
-            }
-        } else {
-            // Start with an empty map of bookings
-            monthlyBookings = new HashMap<>();
-        }
-    }
-
-    /**
-     * Get booked dates for the current month.
-     * 
-     * @return Set of booked dates for the current month
-     */
-    private static Set<Integer> getCurrentMonthBookedDates() {
-        String key = currentYear + "-" + currentMonth;
-        return monthlyBookings.getOrDefault(key, new HashSet<>());
-    }
-
-    /**
-     * Creates and displays the main application window.
-     */
-    private static void createAndShowGUI() {
-        JFrame frame = new JFrame("Calendar Booking");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(500, 400);
-        frame.getContentPane().setBackground(Color.decode("#CCD1D2")); // Background color
-        frame.setLayout(new BorderLayout(10, 10));
-
-        // Top panel for navigation controls
+        // Top panel for navigation
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setBackground(Color.decode("#142524"));
 
-        // Month/year navigation
+        // Navigation buttons
         JPanel navigationPanel = new JPanel(new FlowLayout());
         navigationPanel.setBackground(Color.decode("#142524"));
 
@@ -142,8 +96,6 @@ public class CalendarBooking {
             @Override
             public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
                 JComponent comp = (JComponent) super.prepareRenderer(renderer, row, column);
-
-                // Add padding to cells
                 comp.setBorder(new EmptyBorder(5, 5, 5, 5));
 
                 String value = (String) getValueAt(row, column);
@@ -152,7 +104,7 @@ public class CalendarBooking {
                         int day = Integer.parseInt(value);
                         Set<Integer> bookedDates = getCurrentMonthBookedDates();
                         if (bookedDates.contains(day)) {
-                            comp.setBackground(Color.decode("#30C142")); // Booked dates color
+                            comp.setBackground(Color.decode("#30C142"));
                             comp.setForeground(Color.white);
                         } else {
                             comp.setBackground(Color.white);
@@ -166,12 +118,10 @@ public class CalendarBooking {
                     comp.setBackground(Color.white);
                     comp.setForeground(Color.black);
                 }
-
                 return comp;
             }
         };
 
-        // Add click listener to book/unbook dates
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -188,20 +138,14 @@ public class CalendarBooking {
 
                             if (bookedDates.contains(day)) {
                                 bookedDates.remove(day);
-                                JOptionPane.showMessageDialog(frame,
-                                        "Unbooked date: " + day + " " + MONTH_NAMES[currentMonth] + " " + currentYear,
-                                        "Date Unbooked", JOptionPane.INFORMATION_MESSAGE);
+                                JOptionPane.showMessageDialog(null, "Unbooked date: " + day);
                             } else {
                                 bookedDates.add(day);
-                                JOptionPane.showMessageDialog(frame,
-                                        "Booked date: " + day + " " + MONTH_NAMES[currentMonth] + " " + currentYear,
-                                        "Date Booked", JOptionPane.INFORMATION_MESSAGE);
+                                JOptionPane.showMessageDialog(null, "Booked date: " + day);
                             }
-                            // Save bookings immediately after each change
                             saveBookedDates();
                             table.repaint();
-                        } catch (NumberFormatException ex) {
-                            // Not a valid day number
+                        } catch (NumberFormatException ignored) {
                         }
                     }
                 }
@@ -209,53 +153,32 @@ public class CalendarBooking {
         });
 
         table.setRowHeight(45);
-        table.setGridColor(Color.decode("#848D94")); // Grid color
+        table.setGridColor(Color.decode("#848D94"));
         table.setShowGrid(true);
-        table.getTableHeader().setBackground(Color.decode("#142524")); // Header background
+        table.getTableHeader().setBackground(Color.decode("#142524"));
         table.getTableHeader().setForeground(Color.white);
         table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
 
-        // Add legend panel
-        JPanel legendPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        legendPanel.setBackground(Color.decode("#CCD1D2"));
-
-        JPanel bookedColor = new JPanel();
-        bookedColor.setBackground(Color.decode("#30C142"));
-        bookedColor.setPreferredSize(new Dimension(20, 20));
-
-        JLabel legendLabel = new JLabel("  Booked Date");
-        legendPanel.add(bookedColor);
-        legendPanel.add(legendLabel);
-
-        JLabel instructionLabel = new JLabel("  (Click on a date to book or unbook)");
-        instructionLabel.setFont(new Font("Arial", Font.ITALIC, 12));
-        legendPanel.add(instructionLabel);
-
-        // Refresh calendar
+        // Fill the calendar with dates
         fillCalendar();
 
-        // Add components to frame
-        frame.add(topPanel, BorderLayout.NORTH);
-        frame.add(new JScrollPane(table), BorderLayout.CENTER);
-        frame.add(legendPanel, BorderLayout.SOUTH);
+        // Add components
+        calendarPanel.add(topPanel, BorderLayout.NORTH);
+        calendarPanel.add(new JScrollPane(table), BorderLayout.CENTER);
 
-        // Center the frame
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+        return calendarPanel;
     }
 
-    /**
-     * Changes the current month by the specified amount.
-     * 
-     * @param delta The amount to change (-1 for previous month, 1 for next month)
-     */
+    private static Set<Integer> getCurrentMonthBookedDates() {
+        String key = currentYear + "-" + currentMonth;
+        return monthlyBookings.getOrDefault(key, new HashSet<>());
+    }
+
     private static void changeMonth(int delta) {
         Calendar calendar = new GregorianCalendar(currentYear, currentMonth, 1);
         calendar.add(Calendar.MONTH, delta);
 
-        // Save current month's bookings before switching
         saveBookedDates();
-
         currentYear = calendar.get(Calendar.YEAR);
         currentMonth = calendar.get(Calendar.MONTH);
 
@@ -263,13 +186,8 @@ public class CalendarBooking {
         fillCalendar();
     }
 
-    /**
-     * Fills the calendar with dates for the current month and year.
-     * Booked dates are automatically highlighted.
-     */
     private static void fillCalendar() {
-        model.setRowCount(0); // Clear existing data
-
+        model.setRowCount(0);
         Calendar calendar = new GregorianCalendar(currentYear, currentMonth, 1);
         int startDay = calendar.get(Calendar.DAY_OF_WEEK) - 1;
         int daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);

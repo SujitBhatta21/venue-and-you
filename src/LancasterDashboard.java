@@ -3,6 +3,7 @@ import java.awt.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Calendar;
 
 public class LancasterDashboard extends JFrame {
 
@@ -70,6 +71,11 @@ public class LancasterDashboard extends JFrame {
         timelinePanel.setBorder(BorderFactory.createTitledBorder("Timeline"));
         timelinePanel.setBackground(Color.decode("#CCD1D2"));
 
+        // Add coursework items with booking buttons
+        addBookingItem("17 March 2025", "The Green Room", "Prices 1 hour: £25 Morning/Afternoon: £75 Week: £600 ");
+        addBookingItem("24 March 2025", "Dickens Den", "Prices 1 hour: £25 Morning/Afternoon: £75 Week: £600 ");
+        addBookingItem("31 March 2025", "Poe Parlor", "Prices 1 hour: £25 Morning/Afternoon: £75 Week: £600 ");
+
         // Scroll pane for timeline
         JScrollPane timelineScrollPane = new JScrollPane(timelinePanel);
         timelineScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -87,11 +93,12 @@ public class LancasterDashboard extends JFrame {
         calendarPanel = new JPanel(new BorderLayout());
         calendarPanel.setBorder(BorderFactory.createTitledBorder("Calendar"));
         calendarPanel.setBackground(Color.decode("#CCD1D2"));
-        JLabel calendarLabel = new JLabel("Calendar");
-        calendarLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        calendarPanel.add(calendarLabel, BorderLayout.CENTER);
+        
+        // Add CalendarBooking to the calendar panel
+        CalendarBooking calendarBooking = new CalendarBooking();
+        calendarPanel.add(calendarBooking.getCalendarPanel(), BorderLayout.CENTER);
+        
         rightPanel.add(calendarPanel, BorderLayout.CENTER);
-
         rightPanel.setPreferredSize(new Dimension(300, 0));
         contentPanel.add(rightPanel, BorderLayout.EAST);
 
