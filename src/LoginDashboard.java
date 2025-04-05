@@ -4,7 +4,7 @@ import java.sql.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-public class LancasterLoginDashboard extends JFrame {
+public class LoginDashboard extends JFrame {
     private final JTextField usernameField;
     private final JPasswordField passwordField;
     private final JButton loginButton;
@@ -14,7 +14,7 @@ public class LancasterLoginDashboard extends JFrame {
     private static final String DB_USER = "in2033t21_a";
     private static final String DB_PASSWORD = "lrLUWCLVzDQ";
 
-    public LancasterLoginDashboard() {
+    public LoginDashboard() {
         setTitle("Lancaster's Music Hall - Login");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);
@@ -39,14 +39,16 @@ public class LancasterLoginDashboard extends JFrame {
 
         JLabel usernameLabel = new JLabel("Username:");
         usernameField = new JTextField(15);
-        gbc.gridx = 0; gbc.gridy = 0;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
         loginPanel.add(usernameLabel, gbc);
         gbc.gridx = 1;
         loginPanel.add(usernameField, gbc);
 
         JLabel passwordLabel = new JLabel("Password:");
         passwordField = new JPasswordField(15);
-        gbc.gridx = 0; gbc.gridy = 1;
+        gbc.gridx = 0;
+        gbc.gridy = 1;
         loginPanel.add(passwordLabel, gbc);
         gbc.gridx = 1;
         loginPanel.add(passwordField, gbc);
@@ -54,13 +56,17 @@ public class LancasterLoginDashboard extends JFrame {
         loginButton = new JButton("Login");
         loginButton.setBackground(new Color(0x30C142));
         loginButton.setForeground(Color.WHITE);
-        gbc.gridx = 0; gbc.gridy = 2; gbc.gridwidth = 2;
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.gridwidth = 2;
         gbc.insets = new Insets(15, 5, 5, 5);
         loginPanel.add(loginButton, gbc);
 
         statusLabel = new JLabel(" ", JLabel.CENTER);
         statusLabel.setForeground(Color.RED);
-        gbc.gridx = 0; gbc.gridy = 3; gbc.gridwidth = 2;
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
         loginPanel.add(statusLabel, gbc);
 
         mainPanel.add(loginPanel, BorderLayout.CENTER);
@@ -92,7 +98,8 @@ public class LancasterLoginDashboard extends JFrame {
             statusLabel.setForeground(new Color(0x30C142));
 
             SwingUtilities.invokeLater(() -> {
-                LancasterDashboard.openDashboard();;
+                MarketingPage mp = new MarketingPage();
+                mp.setVisible(true);
                 dispose(); // Close login window after successful login
             });
         } else {
@@ -105,7 +112,7 @@ public class LancasterLoginDashboard extends JFrame {
     private boolean validateLogin(String username, String password) {
         String query = "SELECT * FROM users WHERE username=? AND password=?";
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             PreparedStatement pst = conn.prepareStatement(query)) {
+                PreparedStatement pst = conn.prepareStatement(query)) {
             pst.setString(1, username);
             pst.setString(2, password);
 
@@ -116,15 +123,5 @@ public class LancasterLoginDashboard extends JFrame {
             JOptionPane.showMessageDialog(this, "Database connection error!", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
-    }
-
-    public static void main(String[] args) {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        SwingUtilities.invokeLater(() -> new LancasterLoginDashboard().setVisible(true));
     }
 }
