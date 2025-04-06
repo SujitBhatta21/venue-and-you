@@ -1,7 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class MarketingPage extends JFrame {
 
@@ -30,10 +28,12 @@ public class MarketingPage extends JFrame {
 
     private JPanel createNavBar() {
         JPanel navBar = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        navBar.setBackground(new Color(220, 220, 220));
+        navBar.setBackground(Color.decode("#142524")); // Aztec
 
         // Booking button (acts like dropdown trigger)
         JButton bookingBtn = new JButton("Booking");
+        bookingBtn.setBackground(Color.decode("#30C142")); // Apple
+        bookingBtn.setForeground(Color.WHITE);
         bookingBtn.addActionListener(e -> showBookingSubMenu());
 
         // Add other nav buttons as needed
@@ -41,7 +41,7 @@ public class MarketingPage extends JFrame {
         folBtn.addActionListener(e -> JOptionPane.showMessageDialog(this, "FoL Panel"));
 
         JButton clientBtn = new JButton("Clients");
-        clientBtn.addActionListener(e -> JOptionPane.showMessageDialog(this, "Client Panel"));
+        clientBtn.addActionListener(e -> showClientPanel());
 
         JButton reportBtn = new JButton("Reports");
         reportBtn.addActionListener(e -> JOptionPane.showMessageDialog(this, "Reports Panel"));
@@ -58,42 +58,78 @@ public class MarketingPage extends JFrame {
         return navBar;
     }
 
+    private void showClientPanel() {
+        subMenuPanel.removeAll();
+        subMenuPanel.setLayout(new BorderLayout());
+        subMenuPanel.add(new ClientPanel(), BorderLayout.CENTER);
+        subMenuPanel.revalidate();
+        subMenuPanel.repaint();
+    }
+
     private void showBookingSubMenu() {
         subMenuPanel.removeAll();
+        subMenuPanel.setLayout(new FlowLayout(FlowLayout.CENTER)); // <-- IMPORTANT FIX
 
-        JButton roomBtn = new JButton("Room Booking");
-        roomBtn.addActionListener(e -> showRoomOptions());
+        // --- Room Booking Menu ---
+        JButton roomBookingBtn = new JButton("Room Booking");
+        roomBookingBtn.addActionListener(e -> showRoomList("room"));
+        subMenuPanel.add(roomBookingBtn);
 
+        // --- Hall Booking Menu ---
+        JButton hallBookingBtn = new JButton("Hall Booking");
+        hallBookingBtn.addActionListener(e -> showRoomList("hall"));
+        subMenuPanel.add(hallBookingBtn);
+
+        // --- Group Booking ---
         JButton groupBtn = new JButton("Group Booking");
-        JButton tourBtn = new JButton("Tour Booking");
-        JButton filmBtn = new JButton("Film Booking");
-
-        // Dummy actions for demo
-        groupBtn.addActionListener(e -> JOptionPane.showMessageDialog(this, "Group Booking Panel"));
-        tourBtn.addActionListener(e -> JOptionPane.showMessageDialog(this, "Tour Booking Panel"));
-        filmBtn.addActionListener(e -> JOptionPane.showMessageDialog(this, "Film Booking Panel"));
-
-        subMenuPanel.add(roomBtn);
+        groupBtn.addActionListener(e -> highlightButtonAndShow(groupBtn, "Group Booking Panel"));
         subMenuPanel.add(groupBtn);
+
+        // --- Tour Booking ---
+        JButton tourBtn = new JButton("Tour Booking");
+        tourBtn.addActionListener(e -> highlightButtonAndShow(tourBtn, "Tour Booking Panel"));
         subMenuPanel.add(tourBtn);
+
+        // --- Film Booking ---
+        JButton filmBtn = new JButton("Film Booking");
+        filmBtn.addActionListener(e -> highlightButtonAndShow(filmBtn, "Film Booking Panel"));
         subMenuPanel.add(filmBtn);
 
         subMenuPanel.revalidate();
         subMenuPanel.repaint();
     }
 
-    private void showRoomOptions() {
+    private void showRoomList(String type) {
         subMenuPanel.removeAll();
 
-        String[] rooms = { "Main Hall", "Small Hall", "Rehearsal Space", "Meeting Room A", "Meeting Room B" };
-        for (String room : rooms) {
-            JButton roomBtn = new JButton(room);
-            roomBtn.addActionListener(e -> JOptionPane.showMessageDialog(this, "Booking Info for " + room));
-            subMenuPanel.add(roomBtn);
+        JLabel header = new JLabel("Select a " + (type.equals("hall") ? "Hall" : "Room"));
+        header.setFont(new Font("Arial", Font.BOLD, 16));
+        header.setForeground(Color.decode("#142524"));
+        subMenuPanel.add(header);
+
+        for (Room room : RoomRepository.getRooms()) {
+            boolean isHall = room.name.equals("Main Hall") || room.name.equals("Small Hall");
+            if ((type.equals("hall") && isHall) || (type.equals("room") && !isHall)) {
+                JButton roomBtn = new JButton(room.name);
+                roomBtn.setBackground(Color.decode("#848D94"));
+                roomBtn.setForeground(Color.WHITE);
+                roomBtn.addActionListener(e -> {
+                    resetButtonColors();
+                    roomBtn.setBackground(Color.decode("#30C142"));
+                    subMenuPanel.removeAll();
+                    subMenuPanel.setLayout(new BorderLayout());
+                    subMenuPanel.add(new RoomBookingPanel(room.name), BorderLayout.CENTER);
+                    subMenuPanel.revalidate();
+                    subMenuPanel.repaint();
+                });
+                subMenuPanel.add(roomBtn);
+            }
         }
 
-        // Option to go back
+        // Add back button to go to Booking menu
         JButton backBtn = new JButton("← Back to Booking");
+        backBtn.setBackground(Color.decode("#30C142"));
+        backBtn.setForeground(Color.WHITE);
         backBtn.addActionListener(e -> showBookingSubMenu());
         subMenuPanel.add(backBtn);
 
@@ -101,10 +137,20 @@ public class MarketingPage extends JFrame {
         subMenuPanel.repaint();
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            MarketingPage mp = new MarketingPage();
-            mp.setVisible(true);
-        });
+    private void highlightButtonAndShow(JButton btn, String message) {
+        resetButtonColors();
+        btn.setBackground(Color.decode("#30C142"));
+        btn.setForeground(Color.WHITE);
+        JOptionPane.showMessageDialog(this, message);
+    }
+
+    private void resetButtonColors() {
+        for (Component comp : subMenuPanel.getComponents()) {
+            if (comp instanceof JButton) {
+                JButton button = (JButton) comp;
+                button.setBackground(Color.decode("#848D94"));
+                button.setForeground(Color.WHITE);
+            }
+        }
     }
 }
