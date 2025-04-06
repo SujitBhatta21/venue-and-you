@@ -14,7 +14,8 @@ public class CalendarBooking {
     private static int currentMonth = Calendar.MARCH;
     private static JLabel monthYearLabel;
     private static DefaultTableModel model;
-    private static final String[] MONTH_NAMES = { "January", "February", "March", "April", "May", "June",
+    private static final String[] MONTH_NAMES = { "January", "February", "March",
+            "April", "May", "June",
             "July", "August", "September", "October", "November", "December" };
     private static final String BOOKINGS_FILE = "bookings.dat";
 
@@ -48,7 +49,8 @@ public class CalendarBooking {
 
     /**
      * Returns a JPanel containing the calendar UI.
-     * This allows embedding in another JFrame instead of running a separate window.
+     * This allows embedding in another JFrame instead of running a separate
+     * window.
      */
     public JPanel getCalendarPanel() {
         loadBookedDates();
@@ -69,7 +71,8 @@ public class CalendarBooking {
         prevButton.setFocusPainted(false);
         prevButton.addActionListener(e -> changeMonth(-1));
 
-        monthYearLabel = new JLabel(MONTH_NAMES[currentMonth] + " " + currentYear, JLabel.CENTER);
+        monthYearLabel = new JLabel(MONTH_NAMES[currentMonth] + " " + currentYear,
+                JLabel.CENTER);
         monthYearLabel.setForeground(Color.WHITE);
         monthYearLabel.setFont(new Font("Arial", Font.BOLD, 16));
 
