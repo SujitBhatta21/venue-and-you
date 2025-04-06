@@ -47,7 +47,7 @@ public class MarketingPage extends JFrame {
         reportBtn.addActionListener(e -> JOptionPane.showMessageDialog(this, "Reports Panel"));
 
         JButton helpBtn = new JButton("Help");
-        helpBtn.addActionListener(e -> JOptionPane.showMessageDialog(this, "Help Section"));
+        helpBtn.addActionListener(e -> showHelpPanel());
 
         navBar.add(bookingBtn);
         navBar.add(folBtn);
@@ -66,6 +66,14 @@ public class MarketingPage extends JFrame {
         subMenuPanel.repaint();
     }
 
+    private void showHelpPanel() {
+        subMenuPanel.removeAll();
+        subMenuPanel.setLayout(new BorderLayout());
+        subMenuPanel.add(new HelpPanel(), BorderLayout.CENTER);
+        subMenuPanel.revalidate();
+        subMenuPanel.repaint();
+    }
+    
     private void showBookingSubMenu() {
         subMenuPanel.removeAll();
         subMenuPanel.setLayout(new FlowLayout(FlowLayout.CENTER)); // <-- IMPORTANT FIX

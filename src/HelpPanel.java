@@ -58,8 +58,7 @@ public class HelpPanel extends JPanel {
         contentArea.setForeground(AZTEC);
         contentArea.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createEmptyBorder(10, 10, 10, 10),
-                BorderFactory.createLineBorder(OSLO_GRAY)
-        ));
+                BorderFactory.createLineBorder(OSLO_GRAY)));
 
         // Initial content
         updateContent("Team Overview");
@@ -83,8 +82,7 @@ public class HelpPanel extends JPanel {
                         "Our core values include:\n" +
                         "• Supporting local, national, and international talent\n" +
                         "• Sustainability\n" +
-                        "• Efficient use of technology to reduce manual processes"
-        );
+                        "• Efficient use of technology to reduce manual processes");
 
         sections.put("Contact Information",
                 "Contact Details:\n" +
@@ -96,8 +94,7 @@ public class HelpPanel extends JPanel {
                         "  - Phone: +44 (0)1234 567891\n\n" +
                         "• IT Support\n" +
                         "  - Email: it.support@lancastertheatre.co.uk\n" +
-                        "  - Phone: +44 (0)1234 567892"
-        );
+                        "  - Phone: +44 (0)1234 567892");
 
         sections.put("Technical Support",
                 "Technical Support Guidelines:\n" +
@@ -109,8 +106,7 @@ public class HelpPanel extends JPanel {
                         "  1. Restart the application\n" +
                         "  2. Check internet connection\n" +
                         "  3. Verify login credentials\n" +
-                        "  4. Clear application cache"
-        );
+                        "  4. Clear application cache");
 
         sections.put("Marketing Database",
                 "Marketing Database Requirements:\n" +
@@ -123,8 +119,7 @@ public class HelpPanel extends JPanel {
                         "  - Easy Contact Management\n" +
                         "  - Automated Reminder System\n" +
                         "  - Reporting and Analytics\n" +
-                        "  - Secure Data Storage"
-        );
+                        "  - Secure Data Storage");
 
         sections.put("Troubleshooting",
                 "Troubleshooting Guide:\n" +
@@ -136,8 +131,7 @@ public class HelpPanel extends JPanel {
                         "  - Frequent Crashes: Update to latest version\n\n" +
                         "• Data Backup:\n" +
                         "  - Automatic Backup: Daily at 11 PM\n" +
-                        "  - Manual Backup: Export data weekly"
-        );
+                        "  - Manual Backup: Export data weekly");
 
         return sections;
     }
@@ -145,17 +139,5 @@ public class HelpPanel extends JPanel {
     private void updateContent(String section) {
         contentArea.setText(section + "\n\n" + helpSections.get(section));
         contentArea.setCaretPosition(0); // Scroll to top
-    }
-
-    // For testing purposes
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Help Panel");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(600, 400);
-            frame.add(new HelpPanel());
-            frame.setLocationRelativeTo(null);
-            frame.setVisible(true);
-        });
     }
 }
