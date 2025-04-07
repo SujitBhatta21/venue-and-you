@@ -67,7 +67,7 @@ public class MarketingPage extends JFrame {
             resetNavButtonColors();
             bookingBtn.setBackground(Color.decode("#30C142"));
             bookingBtn.setForeground(Color.WHITE);
-            showBookingSubMenu();
+            new marketing.BookingAppSwing().setVisible(true); // <-- add this
         });
 
         folBtn.addActionListener(e -> {
@@ -149,96 +149,106 @@ public class MarketingPage extends JFrame {
         subMenuPanel.repaint();
     }
 
-    private void showBookingSubMenu() {
-        subMenuPanel.removeAll();
-        subMenuPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-
-        // Room Booking
-        JButton roomBookingBtn = createSubmenuButton("Room Booking");
-        roomBookingBtn.addActionListener(e -> showRoomList("room"));
-        subMenuPanel.add(roomBookingBtn);
-
-        // Hall Booking
-        JButton hallBookingBtn = createSubmenuButton("Hall Booking");
-        hallBookingBtn.addActionListener(e -> showRoomList("hall"));
-        subMenuPanel.add(hallBookingBtn);
-
-        // Group Booking
-        JButton groupBtn = createSubmenuButton("Group Booking");
-        groupBtn.addActionListener(e -> highlightButtonAndShow(groupBtn, "Group Booking Panel"));
-        subMenuPanel.add(groupBtn);
-
-        // Tour Booking
-        JButton tourBtn = createSubmenuButton("Tour Booking");
-        tourBtn.addActionListener(e -> highlightButtonAndShow(tourBtn, "Tour Booking Panel"));
-        subMenuPanel.add(tourBtn);
-
-        // Film Booking
-        JButton filmBtn = createSubmenuButton("Film Booking");
-        filmBtn.addActionListener(e -> highlightButtonAndShow(filmBtn, "Film Booking Panel"));
-        subMenuPanel.add(filmBtn);
-
-        subMenuPanel.revalidate();
-        subMenuPanel.repaint();
-    }
-
-    private JButton createSubmenuButton(String label) {
-        JButton btn = new JButton(label);
-        btn.setBackground(Color.decode("#30C142"));
-        btn.setForeground(Color.BLACK);
-        return btn;
-    }
-
-    private void showRoomList(String type) {
-        subMenuPanel.removeAll();
-
-        JLabel header = new JLabel("Select a " + (type.equals("hall") ? "Hall" : "Room"));
-        header.setFont(new Font("Arial", Font.BOLD, 16));
-        header.setForeground(Color.decode("#142524"));
-        subMenuPanel.add(header);
-
-        for (Room room : RoomRepository.getRooms()) {
-            boolean isHall = room.name.equals("Main Hall") || room.name.equals("Small Hall");
-            if ((type.equals("hall") && isHall) || (type.equals("room") && !isHall)) {
-                JButton roomBtn = new JButton(room.name);
-                roomBtn.setBackground(Color.decode("#30C142"));
-                roomBtn.setForeground(Color.BLACK);
-                roomBtn.addActionListener(e -> {
-                    resetButtonColors();
-                    roomBtn.setBackground(Color.decode("#30C142"));
-                    subMenuPanel.removeAll();
-                    subMenuPanel.setLayout(new BorderLayout());
-                    subMenuPanel.add(new RoomBookingPanel(room.name), BorderLayout.CENTER);
-
-                });
-                subMenuPanel.add(roomBtn);
-            }
-        }
-
-        JButton backBtn = new JButton("← Back to Booking");
-        backBtn.setBackground(Color.decode("#30C142"));
-        backBtn.setForeground(Color.BLACK);
-        backBtn.addActionListener(e -> showBookingSubMenu());
-        subMenuPanel.add(backBtn);
-
-        subMenuPanel.revalidate();
-        subMenuPanel.repaint();
-    }
-
-    private void highlightButtonAndShow(JButton btn, String message) {
-        resetButtonColors();
-        btn.setBackground(Color.decode("#30C142"));
-        btn.setForeground(Color.WHITE);
-        JOptionPane.showMessageDialog(this, message);
-    }
-
-    private void resetButtonColors() {
-        for (Component comp : subMenuPanel.getComponents()) {
-            if (comp instanceof JButton) {
-                JButton button = (JButton) comp;
-                button.setBackground(Color.decode("#848D94"));
-                button.setForeground(Color.BLACK);
-            }
-        }
-    }
+    // ----COMMENT
+    // Removed the Previous Booking code to add hanna marketing package.
+    /*
+     * 
+     * private void showBookingSubMenu() {
+     * subMenuPanel.removeAll();
+     * subMenuPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+     * 
+     * // Room Booking
+     * JButton roomBookingBtn = createSubmenuButton("Room Booking");
+     * roomBookingBtn.addActionListener(e -> showRoomList("room"));
+     * subMenuPanel.add(roomBookingBtn);
+     * 
+     * // Hall Booking
+     * JButton hallBookingBtn = createSubmenuButton("Hall Booking");
+     * hallBookingBtn.addActionListener(e -> showRoomList("hall"));
+     * subMenuPanel.add(hallBookingBtn);
+     * 
+     * // Group Booking
+     * JButton groupBtn = createSubmenuButton("Group Booking");
+     * groupBtn.addActionListener(e -> highlightButtonAndShow(groupBtn,
+     * "Group Booking Panel"));
+     * subMenuPanel.add(groupBtn);
+     * 
+     * // Tour Booking
+     * JButton tourBtn = createSubmenuButton("Tour Booking");
+     * tourBtn.addActionListener(e -> highlightButtonAndShow(tourBtn,
+     * "Tour Booking Panel"));
+     * subMenuPanel.add(tourBtn);
+     * 
+     * // Film Booking
+     * JButton filmBtn = createSubmenuButton("Film Booking");
+     * filmBtn.addActionListener(e -> highlightButtonAndShow(filmBtn,
+     * "Film Booking Panel"));
+     * subMenuPanel.add(filmBtn);
+     * 
+     * subMenuPanel.revalidate();
+     * subMenuPanel.repaint();
+     * }
+     * 
+     * private JButton createSubmenuButton(String label) {
+     * JButton btn = new JButton(label);
+     * btn.setBackground(Color.decode("#30C142"));
+     * btn.setForeground(Color.BLACK);
+     * return btn;
+     * }
+     * 
+     * private void showRoomList(String type) {
+     * subMenuPanel.removeAll();
+     * 
+     * JLabel header = new JLabel("Select a " + (type.equals("hall") ? "Hall" :
+     * "Room"));
+     * header.setFont(new Font("Arial", Font.BOLD, 16));
+     * header.setForeground(Color.decode("#142524"));
+     * subMenuPanel.add(header);
+     * 
+     * for (Room room : RoomRepository.getRooms()) {
+     * boolean isHall = room.name.equals("Main Hall") ||
+     * room.name.equals("Small Hall");
+     * if ((type.equals("hall") && isHall) || (type.equals("room") && !isHall)) {
+     * JButton roomBtn = new JButton(room.name);
+     * roomBtn.setBackground(Color.decode("#30C142"));
+     * roomBtn.setForeground(Color.BLACK);
+     * roomBtn.addActionListener(e -> {
+     * resetButtonColors();
+     * roomBtn.setBackground(Color.decode("#30C142"));
+     * subMenuPanel.removeAll();
+     * subMenuPanel.setLayout(new BorderLayout());
+     * subMenuPanel.add(new RoomBookingPanel(room.name), BorderLayout.CENTER);
+     * 
+     * });
+     * subMenuPanel.add(roomBtn);
+     * }
+     * }
+     * 
+     * JButton backBtn = new JButton("← Back to Booking");
+     * backBtn.setBackground(Color.decode("#30C142"));
+     * backBtn.setForeground(Color.BLACK);
+     * backBtn.addActionListener(e -> showBookingSubMenu());
+     * subMenuPanel.add(backBtn);
+     * 
+     * subMenuPanel.revalidate();
+     * subMenuPanel.repaint();
+     * }
+     * 
+     * private void highlightButtonAndShow(JButton btn, String message) {
+     * resetButtonColors();
+     * btn.setBackground(Color.decode("#30C142"));
+     * btn.setForeground(Color.WHITE);
+     * JOptionPane.showMessageDialog(this, message);
+     * }
+     * 
+     * private void resetButtonColors() {
+     * for (Component comp : subMenuPanel.getComponents()) {
+     * if (comp instanceof JButton) {
+     * JButton button = (JButton) comp;
+     * button.setBackground(Color.decode("#848D94"));
+     * button.setForeground(Color.BLACK);
+     * }
+     * }
+     * }
+     */
 }
