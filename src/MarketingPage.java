@@ -67,7 +67,11 @@ public class MarketingPage extends JFrame {
             resetNavButtonColors();
             bookingBtn.setBackground(Color.decode("#30C142"));
             bookingBtn.setForeground(Color.WHITE);
-            new marketing.BookingAppSwing().setVisible(true); // <-- add this
+            subMenuPanel.removeAll();
+            subMenuPanel.setLayout(new BorderLayout());
+            subMenuPanel.add(new marketing.BookingAppSwing().getBookingPanel(), BorderLayout.CENTER);
+            subMenuPanel.revalidate();
+            subMenuPanel.repaint();
         });
 
         folBtn.addActionListener(e -> {

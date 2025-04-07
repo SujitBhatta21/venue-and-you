@@ -7,3 +7,4 @@ public interface MarketingRequirements {
     List<RoomSetup> getRoomSetupDetails(String roomID, LocalDateTime date);
     List<RevenueReport> getRevenueData(LocalDateTime from, LocalDateTime to);
 }
+    
