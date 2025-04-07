@@ -74,7 +74,7 @@ public class MarketingPage extends JFrame {
             resetNavButtonColors();
             folBtn.setBackground(Color.decode("#30C142"));
             folBtn.setForeground(Color.WHITE);
-            JOptionPane.showMessageDialog(this, "FoL Panel");
+            showFriendsPanel();
         });
 
         clientBtn.addActionListener(e -> {
@@ -137,6 +137,14 @@ public class MarketingPage extends JFrame {
         subMenuPanel.removeAll();
         subMenuPanel.setLayout(new BorderLayout());
         subMenuPanel.add(new HelpPanel(), BorderLayout.CENTER);
+        subMenuPanel.revalidate();
+        subMenuPanel.repaint();
+    }
+
+    private void showFriendsPanel() {
+        subMenuPanel.removeAll();
+        subMenuPanel.setLayout(new BorderLayout());
+        subMenuPanel.add(new FriendsPanel(), BorderLayout.CENTER);
         subMenuPanel.revalidate();
         subMenuPanel.repaint();
     }
@@ -232,15 +240,5 @@ public class MarketingPage extends JFrame {
                 button.setForeground(Color.BLACK);
             }
         }
-    }
-
-    public static void main(String[] args) {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        SwingUtilities.invokeLater(() -> new MarketingPage().setVisible(true));
     }
 }
