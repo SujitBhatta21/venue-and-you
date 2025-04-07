@@ -491,18 +491,71 @@ public class BookingAppSwing extends JFrame {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
+        // Group bookings
         String[] groupHeaders = { "Group Name", "Date", "Size", "Held Seats", "Price" };
         groupModel = new DefaultTableModel(groupHeaders, 0);
         JTable groupTable = new JTable(groupModel);
 
+        for (GroupBooking booking : groupService.getAllBookings()) {
+            if ("Confirmed".equalsIgnoreCase(booking.getStatus())) {
+                confirmedGroupBookings.add(booking);
+                groupModel.addRow(new Object[] {
+                        booking.getGroupName(),
+                        booking.getBookingTime().format(formatter),
+                        booking.getGroupSize(),
+                        String.join(", ", booking.getHeldRows()),
+                        "£" + String.format("%.2f", booking.getPrice())
+                });
+            }
+        }
+
+        JButton deleteGroupBtn = new JButton("Delete Selected Group Booking");
+        deleteGroupBtn.addActionListener(e -> {
+            int selectedRow = groupTable.getSelectedRow();
+            if (selectedRow >= 0) {
+                String groupName = (String) groupModel.getValueAt(selectedRow, 0);
+                LocalDateTime bookingTime = LocalDateTime.parse((String) groupModel.getValueAt(selectedRow, 1),
+                        formatter);
+                groupService.deleteBooking(groupName, bookingTime); // You need to implement this
+                groupModel.removeRow(selectedRow);
+            }
+        });
+
+        // Single bookings
         String[] singleHeaders = { "Customer Name", "Date", "Seat", "Price" };
         singleModel = new DefaultTableModel(singleHeaders, 0);
         JTable singleTable = new JTable(singleModel);
 
+        for (SingleBooking booking : singleService.getAllBookings()) {
+            confirmedSingleBookings.add(booking);
+            singleModel.addRow(new Object[] {
+                    booking.getCustomerName(),
+                    booking.getBookingTime().format(formatter),
+                    booking.getSeatNumber(),
+                    "£" + String.format("%.2f", booking.getPrice())
+            });
+        }
+
+        JButton deleteSingleBtn = new JButton("Delete Selected Single Booking");
+        deleteSingleBtn.addActionListener(e -> {
+            int selectedRow = singleTable.getSelectedRow();
+            if (selectedRow >= 0) {
+                String customerName = (String) singleModel.getValueAt(selectedRow, 0);
+                LocalDateTime bookingTime = LocalDateTime.parse((String) singleModel.getValueAt(selectedRow, 1),
+                        formatter);
+                singleService.deleteBooking(customerName, bookingTime); // You need to implement this
+                singleModel.removeRow(selectedRow);
+            }
+        });
+
         panel.add(new JLabel("Confirmed Group Bookings:"));
         panel.add(new JScrollPane(groupTable));
+        panel.add(deleteGroupBtn);
+
         panel.add(new JLabel("Confirmed Single Bookings:"));
         panel.add(new JScrollPane(singleTable));
+        panel.add(deleteSingleBtn);
+
         return panel;
     }
 
