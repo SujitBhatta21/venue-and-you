@@ -12,6 +12,7 @@ public class FriendsPanel extends JPanel {
     private JScrollPane scrollPane;
 
     private JButton addMemberBtn, removeMemberBtn, renewMemberBtn, searchBtn;
+    private JButton priorityBookingBtn, bookingReportsBtn, sendRemindersBtn;
     private String selectedMemberId = null;
 
     private static final String DB_URL = "jdbc:mysql://sst-stuproj.city.ac.uk:3306/in2033t21";
@@ -95,50 +96,66 @@ public class FriendsPanel extends JPanel {
         filterPanel.add(memberIdLabel); filterPanel.add(memberIdField);
         filterPanel.add(statusLabel); filterPanel.add(statusFilter);
 
-        // Action Panel - with individually styled buttons
+        // Action Panel - using GridLayout
         JPanel actionPanel = new JPanel();
-        actionPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        actionPanel.setLayout(new GridLayout(3, 3, 5, 5)); // 3 rows, 3 columns with spacing
         actionPanel.setBackground(IRON);
-        actionPanel.setBorder(BorderFactory.createLineBorder(APPLE, 1)); // Green border around entire panel
+        actionPanel.setBorder(BorderFactory.createLineBorder(APPLE, 1));
         actionPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Style buttons to match the screenshot
         addMemberBtn = new JButton("➕ Add Member");
-        addMemberBtn.setBackground(new Color(240, 240, 240));
-        addMemberBtn.setForeground(Color.BLACK);
-        addMemberBtn.setFont(NORMAL_FONT);
-        addMemberBtn.addActionListener(e -> showAddMemberDialog());
+        styleActionButton(addMemberBtn);
 
         renewMemberBtn = new JButton("🔄 Renew Membership");
-        renewMemberBtn.setBackground(new Color(240, 240, 240));
-        renewMemberBtn.setForeground(Color.BLACK);
-        renewMemberBtn.setFont(NORMAL_FONT);
+        styleActionButton(renewMemberBtn);
         renewMemberBtn.setEnabled(false);
-        renewMemberBtn.addActionListener(e -> renewSelectedMember());
 
         removeMemberBtn = new JButton("🗑 Remove Selected");
-        removeMemberBtn.setBackground(new Color(240, 240, 240));
-        removeMemberBtn.setForeground(Color.BLACK);
-        removeMemberBtn.setFont(NORMAL_FONT);
+        styleActionButton(removeMemberBtn);
         removeMemberBtn.setEnabled(false);
-        removeMemberBtn.addActionListener(e -> deleteSelectedMember());
 
         searchBtn = new JButton("🔍 Search");
-        searchBtn.setBackground(new Color(240, 240, 240));
-        searchBtn.setForeground(Color.BLACK);
-        searchBtn.setFont(NORMAL_FONT);
-        searchBtn.addActionListener(e -> updateResults());
+        styleActionButton(searchBtn);
 
+        priorityBookingBtn = new JButton("🎟️ Priority Booking");
+        styleActionButton(priorityBookingBtn);
+
+        bookingReportsBtn = new JButton("📊 Booking Reports");
+        styleActionButton(bookingReportsBtn);
+
+        sendRemindersBtn = new JButton("📧 Send Reminders");
+        styleActionButton(sendRemindersBtn);
+
+        // Add buttons in a specific order to fit the grid
         actionPanel.add(addMemberBtn);
         actionPanel.add(renewMemberBtn);
         actionPanel.add(removeMemberBtn);
         actionPanel.add(searchBtn);
+        actionPanel.add(priorityBookingBtn);
+        actionPanel.add(bookingReportsBtn);
+        actionPanel.add(new JLabel()); // Empty cell for spacing if needed
+        actionPanel.add(new JLabel());
+        actionPanel.add(sendRemindersBtn);
 
         topPanel.add(titlePanel);
         topPanel.add(filterPanel);
         topPanel.add(actionPanel);
 
         return topPanel;
+    }
+
+    private void styleActionButton(JButton button) {
+        button.setBackground(new Color(240, 240, 240));
+        button.setForeground(Color.BLACK);
+        button.setFont(NORMAL_FONT);
+        // Add ActionListeners here if not done inline
+        if (button.getText().equals("➕ Add Member")) button.addActionListener(e -> showAddMemberDialog());
+        if (button.getText().equals("🔄 Renew Membership")) button.addActionListener(e -> renewSelectedMember());
+        if (button.getText().equals("🗑 Remove Selected")) button.addActionListener(e -> deleteSelectedMember());
+        if (button.getText().equals("🔍 Search")) button.addActionListener(e -> updateResults());
+        if (button.getText().equals("🎟️ Priority Booking")) button.addActionListener(e -> showPriorityBookingDialog());
+        if (button.getText().equals("📊 Booking Reports")) button.addActionListener(e -> showBookingReportsDialog());
+        if (button.getText().equals("📧 Send Reminders")) button.addActionListener(e -> showSendRemindersDialog());
     }
 
     private JTextField createStyledTextField() {
@@ -582,5 +599,239 @@ public class FriendsPanel extends JPanel {
         card.add(rightPanel, BorderLayout.EAST);
 
         return card;
+    }
+
+    private void showPriorityBookingDialog() {
+        JDialog dialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Priority Booking", true);
+        dialog.setSize(500, 400);
+        dialog.setResizable(false);
+        dialog.setLocationRelativeTo(this);
+
+        JPanel contentPanel = new JPanel();
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        contentPanel.setBackground(Color.WHITE);
+
+        // Title
+        JLabel titleLabel = new JLabel("Set Priority Booking for Friends Members");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        // Form panel
+        JPanel formPanel = new JPanel(new GridLayout(6, 2, 10, 10));
+        formPanel.setBackground(Color.WHITE);
+        formPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        formPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 250));
+
+        // Show dropdown populated from the database
+        JComboBox<String> showCombo = new JComboBox<>();
+        populateShowDropdown(showCombo);
+
+        // Seat blocks
+        JTextField seatBlocksField = new JTextField("A1-A20, B1-B15");
+
+        // Number of seats
+        JSpinner seatCountSpinner = new JSpinner(new SpinnerNumberModel(35, 1, 100, 1));
+
+        // Priority booking dates
+        JSpinner startDateSpinner = new JSpinner(new SpinnerDateModel());
+        startDateSpinner.setEditor(new JSpinner.DateEditor(startDateSpinner, "yyyy-MM-dd"));
+
+        JSpinner endDateSpinner = new JSpinner(new SpinnerDateModel());
+        endDateSpinner.setEditor(new JSpinner.DateEditor(endDateSpinner, "yyyy-MM-dd"));
+
+        // Notification options
+        JCheckBox notifyBoxOfficeCheck = new JCheckBox("Send notification", true);
+        JCheckBox notifyMembersCheck = new JCheckBox("Notify Friends members", true);
+
+        // Add components to form
+        formPanel.add(new JLabel("Show:"));
+        formPanel.add(showCombo);
+        formPanel.add(new JLabel("Reserved Seat Blocks:"));
+        formPanel.add(seatBlocksField);
+        formPanel.add(new JLabel("Number of Seats:"));
+        formPanel.add(seatCountSpinner);
+        formPanel.add(new JLabel("Priority Start Date:"));
+        formPanel.add(startDateSpinner);
+        formPanel.add(new JLabel("Priority End Date:"));
+        formPanel.add(endDateSpinner);
+        formPanel.add(new JLabel("Notifications:"));
+        JPanel checkboxPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        checkboxPanel.setBackground(Color.WHITE);
+        checkboxPanel.add(notifyBoxOfficeCheck);
+        checkboxPanel.add(notifyMembersCheck);
+        formPanel.add(checkboxPanel);
+
+        // Buttons
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        buttonPanel.setBackground(Color.WHITE);
+
+        JButton cancelButton = new JButton("Cancel");
+        cancelButton.addActionListener(e -> dialog.dispose());
+
+        JButton saveButton = new JButton("Save Priority Booking");
+        saveButton.setBackground(APPLE);
+        saveButton.setForeground(Color.WHITE);
+        saveButton.addActionListener(e -> {
+            // In a real implementation, you would likely store the selected
+            // show_id (or title/date) along with other priority booking details
+            // in another database table.
+            String selectedShow = (String) showCombo.getSelectedItem();
+            String seats = seatBlocksField.getText();
+            int numSeats = (Integer) seatCountSpinner.getValue();
+            Date start = (Date) startDateSpinner.getValue();
+            Date end = (Date) endDateSpinner.getValue();
+            boolean notifyBoxOffice = notifyBoxOfficeCheck.isSelected();
+            boolean notifyMembers = notifyMembersCheck.isSelected();
+
+            JOptionPane.showMessageDialog(dialog,
+                    "Priority booking settings:\n" +
+                            "Show: " + selectedShow + "\n" +
+                            "Seats: " + seats + " (" + numSeats + ")\n" +
+                            "Period: " + dateFormat.format(start) + " to " + dateFormat.format(end) + "\n" +
+                            "Notify Box Office: " + notifyBoxOffice + "\n" +
+                            "Notify Members: " + notifyMembers);
+            dialog.dispose();
+        });
+
+        buttonPanel.add(cancelButton);
+        buttonPanel.add(saveButton);
+
+        // Assemble panels
+        contentPanel.add(titleLabel);
+        contentPanel.add(Box.createVerticalStrut(20));
+        contentPanel.add(formPanel);
+        contentPanel.add(Box.createVerticalStrut(20));
+        contentPanel.add(buttonPanel);
+
+        dialog.setContentPane(contentPanel);
+        dialog.setVisible(true);
+    }
+
+    // Helper method to populate the show dropdown from the database
+    private void populateShowDropdown(JComboBox<String> comboBox) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT title, date FROM shows")) {
+            while (rs.next()) {
+                String title = rs.getString("title");
+                Date date = rs.getDate("date");
+                SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy");
+                comboBox.addItem(title + " - " + sdf.format(date));
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error fetching shows: " + ex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void showBookingReportsDialog() {
+        JDialog dialog = new JDialog((Frame)SwingUtilities.getWindowAncestor(this), "Booking Reports", true);
+        dialog.setSize(650, 500);
+        dialog.setLocationRelativeTo(this);
+
+        JTabbedPane tabbedPane = new JTabbedPane();
+
+        // Current bookings tab
+        JPanel currentBookingsPanel = new JPanel(new BorderLayout());
+
+        String[] columns = {"Show", "Date", "Friends Tickets", "Revenue", "% of Total"};
+
+        // Sample data - in a real implementation, this would come from database
+        Object[][] data = {
+                {"Hamlet", "Feb 15, 2025", 28, "£840", "12%"},
+                {"The Importance of Being Earnest", "Feb 28, 2025", 22, "£660", "10%"},
+                {"A Midsummer Night's Dream", "Mar 10, 2025", 15, "£450", "7%"},
+                {"Romeo and Juliet", "Apr 5, 2025", 30, "£900", "14%"},
+                {"Macbeth", "Apr 20, 2025", 18, "£540", "9%"}
+        };
+
+        JTable bookingsTable = new JTable(data, columns);
+        bookingsTable.setFillsViewportHeight(true);
+        JScrollPane scrollPane1 = new JScrollPane(bookingsTable);
+
+        JPanel statsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        statsPanel.add(new JLabel("Total Tickets: 113"));
+        statsPanel.add(new JLabel("Total Revenue: £3,390"));
+        statsPanel.add(new JLabel("Avg. per Show: 22.6"));
+
+        currentBookingsPanel.add(statsPanel, BorderLayout.NORTH);
+        currentBookingsPanel.add(scrollPane1, BorderLayout.CENTER);
+
+        // YoY comparison tab
+        JPanel comparisonPanel = new JPanel(new BorderLayout());
+
+        String[] compColumns = {"Year", "Total Members", "Tickets Booked", "Avg per Member", "Growth"};
+        Object[][] compData = {
+                {"2025", 124, 468, 3.8, "+12%"},
+                {"2024", 110, 418, 3.8, "+8%"},
+                {"2023", 102, 387, 3.8, "N/A"}
+        };
+        JTable comparisonTable = new JTable(compData, compColumns);
+        comparisonTable.setFillsViewportHeight(true);
+        JScrollPane scrollPane2 = new JScrollPane(comparisonTable);
+        comparisonPanel.add(scrollPane2, BorderLayout.CENTER);
+
+        tabbedPane.addTab("Current Bookings", currentBookingsPanel);
+        tabbedPane.addTab("Year-over-Year Comparison", comparisonPanel);
+
+        dialog.setContentPane(tabbedPane);
+        dialog.setVisible(true);
+}
+
+    private void showSendRemindersDialog() {
+        JDialog dialog = new JDialog((Frame)SwingUtilities.getWindowAncestor(this), "Send Reminders", true);
+        dialog.setSize(400, 300);
+        dialog.setLocationRelativeTo(this);
+
+        JPanel contentPanel = new JPanel();
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        contentPanel.setBackground(Color.WHITE);
+
+        JLabel titleLabel = new JLabel("Send Membership Renewal Reminders");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JPanel optionsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        optionsPanel.setBackground(Color.WHITE);
+        JCheckBox upcomingRenewalsCheckbox = new JCheckBox("Remind members with renewals due in the next 30 days", true);
+        JCheckBox expiredMembersCheckbox = new JCheckBox("Remind expired members", false);
+        optionsPanel.add(upcomingRenewalsCheckbox);
+        optionsPanel.add(expiredMembersCheckbox);
+        optionsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        buttonPanel.setBackground(Color.WHITE);
+
+        JButton cancelButton = new JButton("Cancel");
+        cancelButton.addActionListener(e -> dialog.dispose());
+
+        JButton sendButton = new JButton("Send Reminders");
+        sendButton.setBackground(APPLE);
+        sendButton.setForeground(Color.WHITE);
+        sendButton.addActionListener(e -> {
+            // In a real application, this would trigger email sending logic
+            StringBuilder message = new StringBuilder("Reminders will be sent to:\n");
+            if (upcomingRenewalsCheckbox.isSelected()) {
+                message.append("- Members with upcoming renewals\n");
+            }
+            if (expiredMembersCheckbox.isSelected()) {
+                message.append("- Expired members\n");
+            }
+            JOptionPane.showMessageDialog(dialog, message.toString(), "Sending Reminders", JOptionPane.INFORMATION_MESSAGE);
+            dialog.dispose();
+        });
+
+        buttonPanel.add(cancelButton);
+        buttonPanel.add(sendButton);
+
+        contentPanel.add(titleLabel);
+        contentPanel.add(Box.createVerticalStrut(20));
+        contentPanel.add(optionsPanel);
+        contentPanel.add(Box.createVerticalStrut(20));
+        contentPanel.add(buttonPanel);
+
+        dialog.setContentPane(contentPanel);
+        dialog.setVisible(true);
     }
 }
