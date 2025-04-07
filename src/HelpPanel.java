@@ -74,7 +74,7 @@ public class HelpPanel extends JPanel {
         Map<String, String> sections = new HashMap<>();
 
         sections.put("Team Overview",
-                "The Marketing Team at Lancaster Theatre plays a crucial role in:\n" +
+                "The Marketing Team at Lancaster's Music Hall plays a crucial role in:\n" +
                         "• Advertising shows and the venue\n" +
                         "• Handling venue inquiries\n" +
                         "• Managing bookings\n" +
@@ -85,41 +85,35 @@ public class HelpPanel extends JPanel {
                         "• Efficient use of technology to reduce manual processes");
 
         sections.put("Contact Information",
-                "Contact Details:\n" +
-                        "• Joe Lancaster (Marketing Team Lead)\n" +
-                        "  - Email: joe.lancaster@lancastertheatre.co.uk\n" +
-                        "  - Phone: +44 (0)1234 567890\n\n" +
-                        "• Robert Lancaster (Operations Coordinator)\n" +
-                        "  - Email: robert.lancaster@lancastertheatre.co.uk\n" +
-                        "  - Phone: +44 (0)1234 567891\n\n" +
-                        "• IT Support\n" +
-                        "  - Email: it.support@lancastertheatre.co.uk\n" +
-                        "  - Phone: +44 (0)1234 567892");
+                "Lancaster's Music Hall - Contact Information\n\n" +
+                        "• Joe Lancaster\n" +
+                        "• Robert Lancaster\n" +
+                        "• Venue Address: 5374 Main Street City, County WC2N 5DN\n" +
+                        "• Venue Phone Number: 020 7946 5374\n\n");
 
         sections.put("Technical Support",
                 "Technical Support Guidelines:\n" +
-                        "• Common Issues:\n" +
-                        "  - Calendar Synchronization\n" +
-                        "  - Booking System Access\n" +
-                        "  - Database Connection Errors\n\n" +
-                        "• Troubleshooting Steps:\n" +
-                        "  1. Restart the application\n" +
-                        "  2. Check internet connection\n" +
-                        "  3. Verify login credentials\n" +
-                        "  4. Clear application cache");
+                        "For any technical issues with the new system, please contact Venue & You at:\n" +
+                        "• Email: support@venueandyou.com\n" +
+                        "• Phone: 020 7123 4567\n\n" +
+                        "• Common Issues (that we can help with):\n" +
+                        " - Calendar Synchronization\n" +
+                        " - Booking System Access\n" +
+                        " - Database Connection Errors\n\n" +
+                        "• Troubleshooting Steps (you can try first):\n" +
+                        " 1. Restart the application\n" +
+                        " 2. Check your internet connection\n" +
+                        " 3. Verify your login credentials\n" +
+                        " 4. Clear the application cache");
 
         sections.put("Marketing Database",
-                "Marketing Database Requirements:\n" +
-                        "• Key Data Tracking:\n" +
-                        "  - Friends of Lancaster Membership\n" +
-                        "  - Client Contact Information\n" +
-                        "  - Booking History\n" +
-                        "  - Ticket Sales Tracking\n\n" +
-                        "• Desired Features:\n" +
-                        "  - Easy Contact Management\n" +
-                        "  - Automated Reminder System\n" +
-                        "  - Reporting and Analytics\n" +
-                        "  - Secure Data Storage");
+                "The Marketing application helps manage key aspects of Lancaster's Music Hall operations. It includes tools for:\n\n" +
+                        "• Booking Management: This feature allows the team to view the venue's calendar, book available spaces and manage event details.\n\n" +
+                        "• Friends of Lancaster Management: This section is for managing the 'Friends' membership program, including member information, priority bookings, and communication.\n\n" +
+                        "• Client Management: Here, the team can store and organize information about clients, track interactions, and manage communications.\n\n" +
+                        "• Reporting: The application provides tools to generate reports on bookings, ticket sales, and other relevant data to help with analysis and decision-making.\n\n" +
+                        "• General Information: The application also stores general information, which could include venue details, standard contracts, and pricing information.\n");
+
 
         sections.put("Troubleshooting",
                 "Troubleshooting Guide:\n" +
