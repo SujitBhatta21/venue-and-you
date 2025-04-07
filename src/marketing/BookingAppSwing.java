@@ -491,13 +491,40 @@ public class BookingAppSwing extends JFrame {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
+        // Group Bookings Table
         String[] groupHeaders = { "Group Name", "Date", "Size", "Held Seats", "Price" };
         groupModel = new DefaultTableModel(groupHeaders, 0);
         JTable groupTable = new JTable(groupModel);
 
+        // Load group bookings from DB
+        for (GroupBooking booking : groupService.getAllBookings()) {
+            if ("Confirmed".equalsIgnoreCase(booking.getStatus())) {
+                confirmedGroupBookings.add(booking); // populate list for future checks
+                groupModel.addRow(new Object[] {
+                        booking.getGroupName(),
+                        booking.getBookingTime().format(formatter),
+                        booking.getGroupSize(),
+                        String.join(", ", booking.getHeldRows()),
+                        "£" + String.format("%.2f", booking.getPrice())
+                });
+            }
+        }
+
+        // Single Bookings Table
         String[] singleHeaders = { "Customer Name", "Date", "Seat", "Price" };
         singleModel = new DefaultTableModel(singleHeaders, 0);
         JTable singleTable = new JTable(singleModel);
+
+        // Load single bookings from DB
+        for (SingleBooking booking : singleService.getAllBookings()) {
+            confirmedSingleBookings.add(booking); // populate list for future seat validation
+            singleModel.addRow(new Object[] {
+                    booking.getCustomerName(),
+                    booking.getBookingTime().format(formatter),
+                    booking.getSeatNumber(),
+                    "£" + String.format("%.2f", booking.getPrice())
+            });
+        }
 
         panel.add(new JLabel("Confirmed Group Bookings:"));
         panel.add(new JScrollPane(groupTable));
