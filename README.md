@@ -29,3 +29,4 @@ project-repo/
 │── docs/                                # Documentation
 │── README.md                            # General project overview
 │── CONTRIBUTING.md                      # Contribution guidelines
+```

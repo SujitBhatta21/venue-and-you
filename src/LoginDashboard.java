@@ -10,6 +10,8 @@ public class LoginDashboard extends JFrame {
     private final JButton loginButton;
     private final JLabel statusLabel;
 
+    private ImageIcon logo; // edit
+
     private static final String DB_URL = "jdbc:mysql://sst-stuproj.city.ac.uk:3306/in2033t21";
     private static final String DB_USER = "in2033t21_a";
     private static final String DB_PASSWORD = "lrLUWCLVzDQ";
@@ -20,6 +22,11 @@ public class LoginDashboard extends JFrame {
         setSize(800, 600);
         setLocationRelativeTo(null);
         getContentPane().setBackground(new Color(0xCCD1D2));
+
+        logo = new ImageIcon("src/img/lancasters-music-hall-high-resolution-logo.png"); // lancaster logo
+        Image logo1 = logo.getImage();
+        Image scale = logo1.getScaledInstance(170, 135, Image.SCALE_SMOOTH);
+        logo = new ImageIcon(scale);
 
         JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
         mainPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
@@ -53,9 +60,18 @@ public class LoginDashboard extends JFrame {
         gbc.gridx = 1;
         loginPanel.add(passwordField, gbc);
 
+        // Logo image
+        JLabel logoLabel = new JLabel(logo);
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.gridwidth = 2;
+        gbc.insets = new Insets(0, 0, 0, 0);
+        gbc.anchor = GridBagConstraints.SOUTHWEST; // Align to bottom-left
+        loginPanel.add(logoLabel, gbc);
+
         loginButton = new JButton("Login");
         loginButton.setBackground(new Color(0x30C142));
-        loginButton.setForeground(Color.WHITE);
+        loginButton.setForeground(Color.BLACK);
         gbc.gridx = 0;
         gbc.gridy = 2;
         gbc.gridwidth = 2;

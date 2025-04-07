@@ -38,7 +38,7 @@ public class ClientPanel extends JPanel {
 
         JButton searchBtn = new JButton("Search");
         searchBtn.setBackground(Color.decode("#30C142"));
-        searchBtn.setForeground(Color.WHITE);
+        searchBtn.setForeground(Color.BLACK);
         searchBtn.addActionListener(e -> updateResults());
 
         filterPanel.add(new JLabel()); // filler
@@ -50,12 +50,12 @@ public class ClientPanel extends JPanel {
 
         addClientBtn = new JButton("➕ Add Client");
         addClientBtn.setBackground(Color.decode("#30C142"));
-        addClientBtn.setForeground(Color.WHITE);
+        addClientBtn.setForeground(Color.BLACK);
         addClientBtn.addActionListener(e -> showAddClientDialog());
 
         removeClientBtn = new JButton("🗑 Remove Selected Client");
         removeClientBtn.setBackground(Color.RED);
-        removeClientBtn.setForeground(Color.WHITE);
+        removeClientBtn.setForeground(Color.BLACK);
         removeClientBtn.setEnabled(false);
         removeClientBtn.addActionListener(e -> deleteSelectedClient());
 
@@ -240,8 +240,8 @@ public class ClientPanel extends JPanel {
         nameLabel.setFont(new Font("Arial", Font.BOLD, 14));
 
         JButton moreBtn = new JButton("Show Bookings / More");
-        moreBtn.setBackground(Color.decode("#30C142"));
-        moreBtn.setForeground(Color.WHITE);
+        moreBtn.setBackground(Color.darkGray);
+        moreBtn.setForeground(Color.BLACK);
         moreBtn.addActionListener(e -> showClientDetailsDialog(client));
 
         card.addMouseListener(new java.awt.event.MouseAdapter() {
