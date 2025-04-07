@@ -58,6 +58,30 @@ public class MySQLDatabaseHelper {
         return MySQLDatabaseHelper.getAllSingleBookings();
     }
 
+    public static void deleteGroupBooking(String groupName, LocalDateTime time) {
+        String sql = "DELETE FROM group_bookings WHERE group_name = ? AND booking_time = ?";
+        try (Connection conn = getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, groupName);
+            stmt.setTimestamp(2, Timestamp.valueOf(time));
+            stmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void deleteSingleBooking(String customerName, LocalDateTime time) {
+        String sql = "DELETE FROM single_bookings WHERE customer_name = ? AND booking_time = ?";
+        try (Connection conn = getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, customerName);
+            stmt.setTimestamp(2, Timestamp.valueOf(time));
+            stmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static List<SingleBooking> getAllSingleBookings() {
         List<SingleBooking> bookings = new ArrayList<>();
 

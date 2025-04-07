@@ -1,6 +1,9 @@
 package marketing.service;
+
+import marketing.db.MySQLDatabaseHelper;
 import marketing.model.GroupBooking;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +29,10 @@ public class GroupBookingService {
             }
         }
         return false;
+    }
+
+    public void deleteBooking(String groupName, LocalDateTime bookingTime) {
+        MySQLDatabaseHelper.deleteGroupBooking(groupName, bookingTime);
     }
 
     public List<GroupBooking> getAllBookings() {

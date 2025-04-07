@@ -3,6 +3,7 @@ package marketing.service;
 import marketing.db.MySQLDatabaseHelper;
 import marketing.model.SingleBooking;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class SingleBookingService {
@@ -18,6 +19,10 @@ public class SingleBookingService {
 
     public List<SingleBooking> getAllBookings() {
         return MySQLDatabaseHelper.getAllSingleBookings();
+    }
+
+    public void deleteBooking(String customerName, LocalDateTime bookingTime) {
+        MySQLDatabaseHelper.deleteSingleBooking(customerName, bookingTime);
     }
 
     private String extractSeatNumber(String fullSeat) {
