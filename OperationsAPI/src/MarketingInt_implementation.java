@@ -17,7 +17,7 @@ public class MarketingInt_implementation implements MarketingRequirements {
                 "(startDate >= ? AND endDate <= ?)";
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             // Setting parameters for the query
             stmt.setDate(1, Date.valueOf(from.toLocalDate()));
@@ -34,8 +34,7 @@ public class MarketingInt_implementation implements MarketingRequirements {
                         rs.getTime("startTime").toLocalTime(),
                         rs.getTime("endTime").toLocalTime(),
                         rs.getInt("expectedParticipants"),
-                        rs.getInt("availableSeats")
-                ));
+                        rs.getInt("availableSeats")));
             }
         } catch (SQLException e) {
             e.printStackTrace(); // Handle SQL exception
@@ -50,7 +49,7 @@ public class MarketingInt_implementation implements MarketingRequirements {
                 "(startDate >= ? AND endDate <= ?)";
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             // Setting parameters for the query
             stmt.setDate(1, Date.valueOf(from.toLocalDate()));
@@ -67,8 +66,7 @@ public class MarketingInt_implementation implements MarketingRequirements {
                         rs.getDate("endDate").toLocalDate(),
                         rs.getTime("startTime").toLocalTime(),
                         rs.getTime("endTime").toLocalTime(),
-                        rs.getInt("reservedSeats")
-                ));
+                        rs.getInt("reservedSeats")));
             }
         } catch (SQLException e) {
             e.printStackTrace(); // Handle SQL exception
@@ -76,48 +74,8 @@ public class MarketingInt_implementation implements MarketingRequirements {
         return meetings;
     }
 
-
-
-
-    //WE NEED MORE DETAILS OF HOW A ROOM SETUP OBJECT SHOULD BE PRESENTED AS
-//    WE DONT REALLY KNOW HOW IT SHOULD LOOK LIKE OR WHATS THE FORMAT OF THE DATA RETURNED.
-    @Override
-    public List<RoomSetup> getRoomSetupDetails(String roomID, LocalDateTime date) {
-        String sql = "SQL string";
-
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            // sql statement
-            // get RoomID
-            // get date
-            // return both
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @Override
-    public List<RevenueReport> getRevenueData(LocalDateTime from, LocalDateTime to) {
-        String sql = "SQL string";
-
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            // sql statement
-            // get fromDate
-            // get toDate
-            // return all required revenue data between dates
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-
-
-
-
-//    THIS PART IS JUST TESTING PURPOSES AND ALSO AN EXAMPLE OF HOW THE METHODS ABOVE ARE USED.
+    // THIS PART IS JUST TESTING PURPOSES AND ALSO AN EXAMPLE OF HOW THE METHODS
+    // ABOVE ARE USED.
     public static void main(String[] args) {
         // Instantiate the implementation
         MarketingRequirements marketing = new MarketingInt_implementation();

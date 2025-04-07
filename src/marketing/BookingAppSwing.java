@@ -234,7 +234,6 @@ public class BookingAppSwing extends JFrame {
 
     private JPanel createGroupBookingPanel() {
         JPanel panel = new JPanel(new BorderLayout());
-        panel.setLayout(new GridLayout(0, 2, 10, 10));
 
         JPanel form = new JPanel(new GridLayout(0, 2, 10, 10));
         JTextField groupName = new JTextField();
